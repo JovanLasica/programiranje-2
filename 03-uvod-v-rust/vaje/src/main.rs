@@ -7,12 +7,38 @@ use core::panic;
 /// Napišite funkcijo `fib`, ki sprejme začetna člena fibbonacijevega zaporedja, število `n` in vrne `n`-ti člen zaporedja
 
 fn fib(a0: u32, a1: u32, n: u32) -> u32 {
-    panic!("Not implemented");
+    if n == 0 {
+        return a0;
+    }
+    if n == 1 {
+        return a1;
+    }
+
+    let mut pred = a0;
+    let mut tren = a1;
+
+    for _ in 2..=n {
+        let nasl = pred + tren;
+        pred = tren;
+        tren = nasl;
+    }
+
+    tren
+
 }
 
 /// ------------------------------------------------------------------------------------------------
 
 /// Napišite funkcijo `je_prestopno`, ki za podano leto preveri, ali je prestopno
+
+fn je_prestopno(leto: u32) -> bool {
+    if leto % 100 == 0 {
+        leto % 400 == 0
+    }
+    else {
+        leto % 4 == 0
+    }
+}
 
 /// ------------------------------------------------------------------------------------------------
 
@@ -21,13 +47,39 @@ fn fib(a0: u32, a1: u32, n: u32) -> u32 {
 // Dan, mesec, leto
 type Date = (u32, u32, u32);
 
+fn je_veljaven_datum(datum: Date) -> bool {
+    let (dan, mesec, leto) = datum;
+
+    if mesec < 1 || mesec > 12 {
+        return false;
+    }
+
+    let max_dni = match mesec {
+        1 | 3 | 5 | 7 | 8 | 10 | 12 => 31,
+        4 | 6 | 9 | 11 => 30,
+        2 => {
+            if je_prestopno(leto) {
+                29
+            } else {
+                28
+            }
+        }
+        _ => return false,
+    };
+
+    dan >= 1 && dan <= max_dni
+}
+
 /// ------------------------------------------------------------------------------------------------
 
 /// Napišite funkcijo `iteracija(mut start: u32, fun: fn(u32) -> u32, cond: fn(u32) -> bool) -> u32`, ki sprejme iteracijsko funkcijo, zaustavitveni pogoj in začetno vrednost.
 /// Iteracijsko funkcijo zaporedoma uporablja, dokler za rezultat ne velja zaustavitveni pogoj, in vrne prvi rezultat, ki zadošča zaustavitvenemu pogoju.
 
 fn iteracija(mut start: u32, fun: fn(u32) -> u32, cond: fn(u32) -> bool) -> u32 {
-    panic!("Not implemented");
+    while !cond(start) {
+        start = fun(start);
+    }
+    start
 }
 
 /// ------------------------------------------------------------------------------------------------
@@ -41,7 +93,23 @@ fn iteracija(mut start: u32, fun: fn(u32) -> u32, cond: fn(u32) -> bool) -> u32 
 /// 5. Ponavljamo korake 2-4
 
 fn bisekcija(mut a: f64, mut b: f64, fun: fn(f64) -> f64, prec: f64) -> f64 {
-    panic!("Not implemented");
+    let mut c;
+
+    loop {
+        c = (a + b) / 2.0;
+
+        if fun(c).abs() < prec {
+           return c;
+        }
+
+        else if fun(a) * fun(c) < 0.0 {
+            b = c;
+        }
+
+        else {
+            a = c;
+        }
+    }
 }
 
 /// ------------------------------------------------------------------------------------------------
@@ -58,15 +126,40 @@ fn guessing_game() {
 /// Napišite funkcijo `fn mat_mul(a: [[u32; 2]; 2], b: [[u32; 2]; 2]) -> [[u32; 2]; 2]`, ki matriki `a` in `b` zmnoži in vrne rezultat
 
 fn mat_mul(a: [[u32; 2]; 2], b: [[u32; 2]; 2]) -> [[u32; 2]; 2] {
-    panic!("Not implemented");
+    [
+    [
+        a[0][0]*b[0][0]+a[0][1]*b[1][0],
+        a[0][0]*b[0][1]+a[0][1]*b[1][1],
+    ],
+    [       
+        a[1][0]*b[0][0]+a[1][1]*b[1][0],
+        a[1][0]*b[0][1]+a[1][1]*b[1][1]
+    ]
+    ]
 }
 
 /// ------------------------------------------------------------------------------------------------
 /// Napišite funkcijo `ordered`, ki sprejme tabelo števil in vrne `true`, če so števila urejena (padajoče ali naraščajoče) in `false` sicer.
 
-fn ordered(arr: &[u32]) -> bool {
-    panic!("Not implemented");
-}
+/// fn ordered(arr: &[u32]) -> bool {
+///    if arr.len() <= 1 {
+///        return true;
+///    }
+///
+///    let mut non_decreasing = true;
+///    let mut non_increasing = true;
+///
+///    for i in 1..arr.len() {
+///        if arr[i] < arr[i - 1] {
+///            non_decreasing = false;
+///        }
+///        if arr[i] > arr[i - 1] {
+///            non_increasing = false;
+///        }
+///    }
+///
+///    non_decreasing || non_increasing
+/// }
 
 /// ------------------------------------------------------------------------------------------------
 /// Hitro potenciranje
